@@ -167,4 +167,4 @@ Le PVC est bien créé et porte le nom : pvc-ddf811a2-6298-499c-b106-1d3ead80059
 
 ## Cluster ELK à 3 noeuds : Que constatez-vous ?
 
-On remarque les 3 noeuds ont des utilisations différentes du disque et chaque noeud propose de l'espace de disque.
+On remarque que les 3 noeuds ont des utilisations différentes du disque et chaque noeud propose de l'espace de disque.
