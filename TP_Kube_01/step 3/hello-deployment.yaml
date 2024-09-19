@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-deployment
+  labels:
+    app: hello
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+      - name: hello
+        image: registry.gitlab.com/takima-school/images/simple-website:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: K8S_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: K8S_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: CUSTOM_COLOR
+          valueFrom:
+            secretKeyRef:
+              name: hello-secret
+              key: color
+        - name: SECRET_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: hello-secret
+              key: username
+        - name: SECRET_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: hello-secret
+              key: password
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      imagePullSecrets:
+      - name: takima-school-registry

@@ -1,0 +1,21 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: formation-cdb
+  labels:
+    app: formation-cdb
+spec:
+  teamId: "formation"
+  volume:
+    size: 3Gi 
+  numberOfInstances: 2  
+  users:
+    cdb:
+      - superuser
+      - createdb
+  databases:
+    cdb: cdb 
+  postgresql:
+    version: "14"
+  enableLogicalBackup: true
+  logicalBackupSchedule: "30 00 * * *"

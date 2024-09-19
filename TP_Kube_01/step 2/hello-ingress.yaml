@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: unicorn.theo-gimond.epf.takima.school
+    http:
+      paths:
+      - backend:
+          service:
+            name: hello-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - unicorn.theo-gimond.epf.takima.school
+    secretName: app-wildcard

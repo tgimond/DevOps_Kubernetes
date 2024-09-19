@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+  labels:
+    app: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+      - name: front
+        image: registry.gitlab.com/takima-school/images/cdb/www:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: front-config
+              key: API_URL
+        resources:
+          requests:
+            memory: "192Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 100
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 100
+          periodSeconds: 5
+        securityContext:
+          runAsUser: 101
+          runAsGroup: 101
+      imagePullSecrets:
+      - name: takima-school-registry
